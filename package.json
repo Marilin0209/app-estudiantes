@@ -1,5 +1,5 @@
 {
-  "name": "app-tareas",
+  "name": "app-estudiantes",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -29,5 +29,8 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
     "vite": "^7.1.6"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
