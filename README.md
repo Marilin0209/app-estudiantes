@@ -1,6 +1,4 @@
-# 📌 Proyecto: App de Estudiantes en React
-
-# 📌 Proyecto: App en React
+# 📌 Proyecto: App de Estudiantes
 
 Este es un proyecto de Gestion de estudiantes desarrollado con **React + Vite** y **Material UI**.  
 Incluye un menú lateral (drawer) con navegación y páginas para \*_agregar, modificar y eliminar estudiantes_.
