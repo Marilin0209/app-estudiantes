@@ -5,22 +5,7 @@ const SistemaEstudiantes = () => {
   const [apellido, setApellido] = useState("");
   const [mail, setMail] = useState("");
   const [curso, setCurso] = useState("");
-  const [estudiantes, setEstudiantes] = useState([
-    {
-      id: 1,
-      nombre: "Juan",
-      apellido: "Pérez",
-      mail: "juan.perez@email.com",
-      curso: "Matemática",
-    },
-    {
-      id: 2,
-      nombre: "María",
-      apellido: "González",
-      mail: "maria.gonzalez@email.com",
-      curso: "Historia",
-    },
-  ]);
+  const [estudiantes, setEstudiantes] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

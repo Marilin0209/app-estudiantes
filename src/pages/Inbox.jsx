@@ -12,29 +12,14 @@ const Inbox = () => {
 export default Inbox; */
 
 import React, { useState, useEffect } from "react";
+import { getEstudiantes } from "../services/api";
 
 const Inbox = () => {
   const [estudiantes, setEstudiantes] = useState([]);
 
   useEffect(() => {
-    cargarEstudiantes();
-
-    // Actualizar cada segundo para reflejar cambios
-    const interval = setInterval(() => {
-      cargarEstudiantes();
-    }, 1000);
-
-    return () => clearInterval(interval);
+    getEstudiantes().then((estudiantesres) => console.log(estudiantesres));
   }, []);
-
-  const cargarEstudiantes = () => {
-    const estudiantesGuardados = localStorage.getItem("estudiantes");
-    if (estudiantesGuardados) {
-      setEstudiantes(JSON.parse(estudiantesGuardados));
-    } else {
-      setEstudiantes([]);
-    }
-  };
 
   return (
     <div
@@ -66,7 +51,7 @@ const Inbox = () => {
               color: "#1a1a1a",
             }}
           >
-            📋 Lista de Estudiantes
+            📋 Lista de Estudiantes de prueba
           </h1>
           <p
             style={{
