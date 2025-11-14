@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+/*import React, { useState, useEffect } from "react";
 
 const Modificar = () => {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -519,6 +519,159 @@ const Modificar = () => {
           )}
         </div>
       </div>
+    </div>
+  );
+};
+
+export default Modificar;    */
+
+import React, { useState, useEffect } from "react";
+import { getEstudiantes, actualizarEstudiante } from "../services/api";
+
+const Modificar = () => {
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [estudianteSeleccionado, setEstudianteSeleccionado] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [mail, setMail] = useState("");
+  const [curso, setCurso] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Cargar estudiantes al iniciar
+  useEffect(() => {
+    cargarEstudiantes();
+  }, []);
+
+  const cargarEstudiantes = async () => {
+    try {
+      setLoading(true);
+      const data = await getEstudiantes();
+      setEstudiantes(data);
+    } catch (error) {
+      alert("Error al cargar estudiantes");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cuando seleccionas un estudiante, se completan los inputs
+  const handleSeleccionarEstudiante = (e) => {
+    const id = e.target.value;
+    setEstudianteSeleccionado(id);
+
+    const estudiante = estudiantes.find(
+      (est) => est._id === id || est.id === id
+    );
+
+    if (estudiante) {
+      setNombre(estudiante.nombre);
+      setApellido(estudiante.apellido);
+      setMail(estudiante.mail);
+      setCurso(estudiante.curso);
+    }
+  };
+
+  const handleModificar = async () => {
+    if (!estudianteSeleccionado) {
+      return alert("Selecciona un estudiante");
+    }
+
+    if (!nombre || !apellido || !mail || !curso) {
+      return alert("Todos los campos son obligatorios");
+    }
+
+    try {
+      setLoading(true);
+
+      const estudianteActualizado = await actualizarEstudiante(
+        estudianteSeleccionado,
+        { nombre, apellido, mail, curso }
+      );
+
+      // Actualizo localmente
+      setEstudiantes(
+        estudiantes.map((est) =>
+          est._id === estudianteSeleccionado ||
+          est.id === estudianteSeleccionado
+            ? estudianteActualizado
+            : est
+        )
+      );
+
+      alert("Estudiante modificado correctamente");
+
+      // Limpio el formulario
+      setEstudianteSeleccionado("");
+      setNombre("");
+      setApellido("");
+      setMail("");
+      setCurso("");
+    } catch (error) {
+      alert("Error al modificar estudiante");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ⭐⭐⭐ AQUÍ ESTABA TU PROBLEMA: FALTABA EL RETURN RENDERIZANDO EL FORM ⭐⭐⭐
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Modificar estudiante</h2>
+
+      {loading && <p>Cargando...</p>}
+
+      {/* Selección del estudiante */}
+      <label>Seleccionar estudiante:</label>
+      <select
+        value={estudianteSeleccionado}
+        onChange={handleSeleccionarEstudiante}
+      >
+        <option value="">-- Seleccionar --</option>
+        {estudiantes.map((est) => (
+          <option key={est._id || est.id} value={est._id || est.id}>
+            {est.nombre} {est.apellido}
+          </option>
+        ))}
+      </select>
+
+      {/* Formulario */}
+      {estudianteSeleccionado && (
+        <div style={{ marginTop: "20px" }}>
+          <input
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <br />
+
+          <input
+            placeholder="Apellido"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+          />
+          <br />
+
+          <input
+            placeholder="Email"
+            value={mail}
+            onChange={(e) => setMail(e.target.value)}
+          />
+          <br />
+
+          <input
+            placeholder="Curso"
+            value={curso}
+            onChange={(e) => setCurso(e.target.value)}
+          />
+          <br />
+
+          <button onClick={handleModificar} disabled={loading}>
+            Guardar cambios
+          </button>
+        </div>
+      )}
     </div>
   );
 };

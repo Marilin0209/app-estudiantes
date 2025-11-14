@@ -9,7 +9,7 @@ const Inbox = () => {
   );
 };
 
-export default Inbox; */
+export default Inbox; /
 
 import React, { useState, useEffect } from "react";
 import { getEstudiantes } from "../services/api";
@@ -215,7 +215,7 @@ const Inbox = () => {
           )}
         </div>
 
-        {/* Resumen por Curso */}
+        {/* Resumen por Curso /}
         {estudiantes.length > 0 && (
           <div
             style={{
@@ -301,6 +301,71 @@ const Inbox = () => {
           </div>
         )}
       </div>
+    </div>
+  );
+};
+
+export default Inbox; */
+
+import React, { useState, useEffect } from "react";
+import { getEstudiantes } from "../services/api";
+
+const Inbox = () => {
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    cargarEstudiantes();
+  }, []);
+
+  const cargarEstudiantes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getEstudiantes();
+      setEstudiantes(data);
+    } catch (err) {
+      setError("Error al cargar los estudiantes");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: "100px" }}>
+        <h2>⏳ Cargando estudiantes...</h2>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ textAlign: "center", padding: "100px", color: "red" }}>
+        <h2>❌ {error}</h2>
+        <button onClick={cargarEstudiantes}>Reintentar</button>
+      </div>
+    );
+  }
+
+  // 👉 ACÁ ESTABA LO QUE FALTABA: ¡el return final!
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>📚 Lista de Estudiantes</h2>
+
+      {estudiantes.length === 0 ? (
+        <p>No hay estudiantes cargados.</p>
+      ) : (
+        <ul>
+          {estudiantes.map((e) => (
+            <li key={e._id}>
+              <strong>{e.nombre}</strong> - {e.apellido} - {e.edad} años
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

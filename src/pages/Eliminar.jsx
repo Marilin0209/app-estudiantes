@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+/*import React, { useState, useEffect } from "react";
 
 const Eliminar = () => {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -314,7 +314,7 @@ const Eliminar = () => {
           )}
         </div>
 
-        {/* Estadísticas */}
+        {/* Estadísticas /}
         <div
           style={{
             marginTop: "30px",
@@ -393,6 +393,95 @@ const Eliminar = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+export default Eliminar; */
+
+import React, { useState, useEffect } from "react";
+import { getEstudiantes, eliminarEstudiante } from "../services/api";
+
+const Eliminar = () => {
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    cargarEstudiantes();
+  }, []);
+
+  const cargarEstudiantes = async () => {
+    try {
+      setLoading(true);
+      const data = await getEstudiantes();
+      setEstudiantes(data);
+    } catch (error) {
+      alert("Error al cargar estudiantes");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEliminar = async (id) => {
+    const estudiante = estudiantes.find((est) => (est._id || est.id) === id);
+
+    if (
+      window.confirm(
+        `¿Estás seguro de eliminar a ${estudiante.nombre} ${estudiante.apellido}?`
+      )
+    ) {
+      try {
+        setLoading(true);
+
+        await eliminarEstudiante(id);
+
+        setEstudiantes(estudiantes.filter((est) => (est._id || est.id) !== id));
+
+        alert("Estudiante eliminado correctamente");
+      } catch (error) {
+        alert("Error al eliminar el estudiante");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // ⭐⭐⭐ AQUÍ ESTABA EL PROBLEMA → FALTABA RETURN ⭐⭐⭐
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Eliminar Estudiante</h2>
+
+      {loading && <p>Cargando...</p>}
+
+      {estudiantes.length === 0 ? (
+        <p>No hay estudiantes registrados.</p>
+      ) : (
+        <ul>
+          {estudiantes.map((est) => (
+            <li
+              key={est._id || est.id}
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "300px",
+              }}
+            >
+              {est.nombre} {est.apellido}
+              <button
+                style={{ background: "red", color: "white" }}
+                onClick={() => handleEliminar(est._id || est.id)}
+                disabled={loading}
+              >
+                Eliminar
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

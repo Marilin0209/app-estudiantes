@@ -20,29 +20,22 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Toolbar,
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import {
-  FaCode,
-  FaTasks,
-  FaPlus,
-  FaEdit,
-  FaTrash,
-  FaStar,
-  FaEnvelope,
-} from "react-icons/fa";
+import { FaCode, FaTasks, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 const drawerWidth = 200; // Ancho del menú lateral
-const APPBAR_HEIGHT = 100; // Alto del AppBar (en píxeles)
+const APPBAR_HEIGHT = 100; // Alto del AppBar
 
 export default function MenuDrawer() {
   const [open, setOpen] = React.useState(false);
 
-  // Ajusta el paddingTop del body para evitar que el contenido quede oculto por el AppBar fijo
+  // Ajusta el paddingTop del body para evitar que el contenido quede oculto por el AppBar
   React.useEffect(() => {
     const previousPaddingTop = document.body.style.paddingTop;
     document.body.style.paddingTop = `${APPBAR_HEIGHT}px`;
@@ -51,7 +44,7 @@ export default function MenuDrawer() {
     };
   }, []);
 
-  // Maneja la apertura y cierre del Drawer
+  // Maneja apertura/cierre del menú
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
@@ -59,17 +52,16 @@ export default function MenuDrawer() {
   // Contenido del Drawer
   const drawer = (
     <div>
-      {/* Cabecera del Drawer */}
+      {/* Cabecera */}
       <Toolbar sx={{ minHeight: `${APPBAR_HEIGHT}px` }}>
         <Typography
           variant="h6"
           noWrap
-          component="div"
           sx={{
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            color: "#a0cd60", //Color Verded
+            color: "#a0cd60",
             fontFamily: "Fira Code, monospace",
           }}
         >
@@ -80,46 +72,54 @@ export default function MenuDrawer() {
 
       <Divider />
 
-      {/* Lista de opciones de navegación */}
+      {/* Opciones de Menú */}
       <List>
-        <ListItem
-          button
-          component={Link}
-          to="/inbox"
-          onClick={handleDrawerToggle}
-        >
-          <FaTasks style={{ marginRight: 10 }} />
-          <ListItemText primary="Ver Estudiantes" />
+        {/* VER ESTUDIANTES */}
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/inbox"
+            onClick={handleDrawerToggle}
+          >
+            <FaTasks style={{ marginRight: 10 }} />
+            <ListItemText primary="Ver Estudiantes" />
+          </ListItemButton>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link}
-          to="/agregar"
-          onClick={handleDrawerToggle}
-        >
-          <FaPlus style={{ marginRight: 10 }} />
-          <ListItemText primary="Agregar Estudiante" />
+        {/* AGREGAR */}
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/agregar"
+            onClick={handleDrawerToggle}
+          >
+            <FaPlus style={{ marginRight: 10 }} />
+            <ListItemText primary="Agregar Estudiante" />
+          </ListItemButton>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link}
-          to="/modificar"
-          onClick={handleDrawerToggle}
-        >
-          <FaEdit style={{ marginRight: 10 }} />
-          <ListItemText primary="Modificar Estudiante" />
+        {/* MODIFICAR */}
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/modificar"
+            onClick={handleDrawerToggle}
+          >
+            <FaEdit style={{ marginRight: 10 }} />
+            <ListItemText primary="Modificar Estudiante" />
+          </ListItemButton>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link}
-          to="/eliminar"
-          onClick={handleDrawerToggle}
-        >
-          <FaTrash style={{ marginRight: 10 }} />
-          <ListItemText primary="Eliminar Estudiante" />
+        {/* ELIMINAR */}
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            to="/eliminar"
+            onClick={handleDrawerToggle}
+          >
+            <FaTrash style={{ marginRight: 10 }} />
+            <ListItemText primary="Eliminar Estudiante" />
+          </ListItemButton>
         </ListItem>
       </List>
     </div>
@@ -129,16 +129,16 @@ export default function MenuDrawer() {
     <div style={{ display: "flex" }}>
       <CssBaseline />
 
-      {/* Barra superior fija */}
+      {/* Barra superior */}
       <AppBar
         position="fixed"
         sx={{
           width: "100%",
-          backgroundColor: "#a0cd60", // Color verde
+          backgroundColor: "#a0cd60",
         }}
       >
         <Toolbar sx={{ minHeight: `${APPBAR_HEIGHT}px !important` }}>
-          {/* Botón de menú para abrir/cerrar el Drawer */}
+          {/* Botón menú */}
           <IconButton
             color="inherit"
             edge="start"
@@ -148,11 +148,10 @@ export default function MenuDrawer() {
             <MenuIcon />
           </IconButton>
 
-          {/* Título de la aplicación */}
+          {/* Título */}
           <Typography
             variant="h6"
             noWrap
-            component="div"
             sx={{ fontFamily: "Fira Code, monospace" }}
           >
             Gestion Escolar
@@ -172,7 +171,7 @@ export default function MenuDrawer() {
             width: drawerWidth,
             backgroundColor: "#F2E7DC",
             color: "#038C7F",
-            marginTop: `${APPBAR_HEIGHT}px`, // Comienza debajo del AppBar
+            marginTop: `${APPBAR_HEIGHT}px`,
           },
         }}
       >

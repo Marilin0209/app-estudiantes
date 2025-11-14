@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
+import { getEstudiantes, crearEstudiante } from "../services/api";
 
 const SistemaEstudiantes = () => {
   const [nombre, setNombre] = useState("");
@@ -6,6 +7,10 @@ const SistemaEstudiantes = () => {
   const [mail, setMail] = useState("");
   const [curso, setCurso] = useState("");
   const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +54,7 @@ const SistemaEstudiantes = () => {
           margin: "0 auto",
         }}
       >
-        {/* FORMULARIO */}
+        {/* FORMULARIO /}
         <div
           style={{
             backgroundColor: "white",
@@ -80,7 +85,7 @@ const SistemaEstudiantes = () => {
           </p>
 
           <form onSubmit={handleSubmit}>
-            {/* Nombre y Apellido en fila */}
+            {/* Nombre y Apellido en fila /}
             <div
               style={{
                 display: "grid",
@@ -154,7 +159,7 @@ const SistemaEstudiantes = () => {
               </div>
             </div>
 
-            {/* Email */}
+            {/* Email /}
             <div style={{ marginBottom: "30px" }}>
               <label
                 style={{
@@ -187,7 +192,7 @@ const SistemaEstudiantes = () => {
               />
             </div>
 
-            {/* Curso */}
+            {/* Curso /}
             <div style={{ marginBottom: "40px" }}>
               <label
                 style={{
@@ -226,7 +231,7 @@ const SistemaEstudiantes = () => {
               </select>
             </div>
 
-            {/* Botón */}
+            {/* Botón /}
             <button
               type="submit"
               style={{
@@ -258,7 +263,7 @@ const SistemaEstudiantes = () => {
           </form>
         </div>
 
-        {/* TABLA */}
+        {/* TABLA /}
         <div
           style={{
             backgroundColor: "white",
@@ -438,6 +443,224 @@ const SistemaEstudiantes = () => {
       </div>
     </div>
   );
+};
+
+export default SistemaEstudiantes; */
+
+import React, { useState, useEffect } from "react";
+import { getEstudiantes, crearEstudiante } from "../services/api";
+
+const SistemaEstudiantes = () => {
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [mail, setMail] = useState("");
+  const [curso, setCurso] = useState("");
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    cargarEstudiantes();
+  }, []);
+
+  const cargarEstudiantes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getEstudiantes();
+      setEstudiantes(data);
+    } catch (err) {
+      setError("Error al cargar los estudiantes");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!nombre || !apellido || !mail || !curso) {
+      alert("Por favor completa todos los campos");
+      return;
+    }
+
+    const nuevoEstudiante = { nombre, apellido, mail, curso };
+
+    try {
+      setLoading(true);
+      const estudianteCreado = await crearEstudiante(nuevoEstudiante);
+
+      setEstudiantes([...estudiantes, estudianteCreado]);
+
+      setNombre("");
+      setApellido("");
+      setMail("");
+      setCurso("");
+
+      alert("✅ Estudiante agregado exitosamente");
+    } catch (err) {
+      alert("❌ Error al guardar el estudiante");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f8f9fa",
+        padding: "40px 20px",
+      }}
+    >
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "30px",
+              borderRadius: "12px",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
+          >
+            ⏳ Cargando...
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div
+          style={{
+            backgroundColor: "#fee",
+            color: "#c00",
+            padding: "15px",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {/* 🟩 FORMULARIO PARA AGREGAR */}
+      <div
+        style={{
+          maxWidth: "500px",
+          margin: "0 auto",
+          backgroundColor: "#fff",
+          padding: "25px",
+          borderRadius: "12px",
+          boxShadow: "0px 2px 10px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h2 style={{ textAlign: "center" }}>➕ Agregar Estudiante</h2>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            placeholder="Apellido"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+            style={inputStyle}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={mail}
+            onChange={(e) => setMail(e.target.value)}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            placeholder="Curso"
+            value={curso}
+            onChange={(e) => setCurso(e.target.value)}
+            style={inputStyle}
+          />
+
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "12px",
+              marginTop: "10px",
+              backgroundColor: "#28a745",
+              border: "none",
+              color: "white",
+              borderRadius: "8px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}
+          >
+            Guardar
+          </button>
+        </form>
+      </div>
+
+      {/* LISTA DE ESTUDIANTES */}
+      <div style={{ marginTop: "40px" }}>
+        <h2 style={{ textAlign: "center" }}>📋 Estudiantes Registrados</h2>
+
+        {estudiantes.length === 0 ? (
+          <p style={{ textAlign: "center" }}>No hay estudiantes cargados.</p>
+        ) : (
+          <ul style={{ maxWidth: "500px", margin: "0 auto" }}>
+            {estudiantes.map((e) => (
+              <li
+                key={e._id}
+                style={{
+                  background: "#fff",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
+                }}
+              >
+                <strong>
+                  {e.nombre} {e.apellido}
+                </strong>{" "}
+                — {e.curso}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Estilo de inputs
+const inputStyle = {
+  width: "100%",
+  padding: "12px",
+  marginBottom: "10px",
+  border: "1px solid #ccc",
+  borderRadius: "8px",
+  fontSize: "16px",
 };
 
 export default SistemaEstudiantes;

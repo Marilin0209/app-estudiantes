@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { api } from "../services/api";
+import { getEstudiantes } from "../services/api";
 
 function ListaEstudiantes() {
   const [estudiantes, setEstudiantes] = useState([]);
 
   useEffect(() => {
-    api.getEstudiantes().then(setEstudiantes).catch(console.error);
+    getEstudiantes().then(setEstudiantes).catch(console.error);
   }, []);
 
   return (
